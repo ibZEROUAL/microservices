@@ -1,6 +1,7 @@
 package com.learning.productservice.service;
 
 import com.learning.productservice.dto.ProductDto;
+import com.learning.productservice.exceptions.NoSuchProductException;
 import com.learning.productservice.mapper.ProductMapper;
 import com.learning.productservice.model.Product;
 import com.learning.productservice.repository.ProductRepository;
@@ -33,11 +34,8 @@ public class ProductService {
     }
 
     public ProductDto updateProduct(String id, ProductDto productDto){
-        Product product = productRepository.findById(id).get();
+        Product product = productRepository.findById(id).orElseThrow(NoSuchProductException::new);
 
-        if (product == null) {
-            throw new RuntimeException("Product not found");
-        }
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
         product.setPrice(productDto.getPrice());
